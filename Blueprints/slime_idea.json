@@ -1,0 +1,12 @@
+{
+  "id": "craftablemod_blueprint_slime",
+  "nameTerm": "card_slime_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "goop,goop,goop,small_slime",
+    "ResultCard": "slime",
+    "Time": 0
+  }
+]
+}

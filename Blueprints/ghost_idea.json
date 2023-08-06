@@ -1,0 +1,13 @@
+{
+  "id": "craftablemod_blueprint_ghost",
+  "nameTerm": "card_ghost_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "corpse,magic_dust",
+    "ResultCard": "ghost",
+    "Time": 10,
+    "StatusTerm": "craftablemod_idea_ghost_status"
+  }
+]
+}

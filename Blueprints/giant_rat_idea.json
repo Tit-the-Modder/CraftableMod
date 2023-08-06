@@ -1,0 +1,14 @@
+{
+  "id": "craftablemod_blueprint_giant_rat",
+  "nameTerm": "card_giant_rat_name",
+  "group": "Cooking",
+  "needsExactMatch" : false,
+  "subprints": [
+    {
+      "RequiredCards": "rat,stew",
+      "ResultCard": "giant_rat",
+      "Time": 0,
+    }
+  ],
+  "script": "CraftableMobNS.Craftable"
+}

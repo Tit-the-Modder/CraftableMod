@@ -1,10 +1,10 @@
 {
   "id": "craftablemod_blueprint_skeleton",
-  "nameTerm": "skeleton_name",
+  "nameTerm": "card_skeleton_name",
   "group": "Cooking",
   "subprints": [
   {
-    "RequiredCards": "bone,bone,bone,bone,bone,",
+    "RequiredCards": "bone,bone,bone,bone,bone",
     "ResultCard": "skeleton",
     "Time": 10,
     "StatusTerm": "craftablemod_idea_skeleton_status"

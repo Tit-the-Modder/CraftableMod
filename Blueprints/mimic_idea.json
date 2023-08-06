@@ -1,0 +1,31 @@
+{
+  "id": "craftablemod_blueprint_mimic",
+  "nameTerm": "card_mimic_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "coin_chest,magic_dust",
+    "ResultCard": "mimic",
+    "Time": 10,
+    "StatusTerm": "craftablemod_idea_mimic_status"
+  },
+  {
+    "RequiredCards": "shell_chest,magic_dust",
+    "ResultCard": "mimic",
+    "Time": 10,
+    "StatusTerm": "craftablemod_idea_mimic_status"
+  },
+  {
+    "RequiredCards": "treasure_chest,magic_dust",
+    "ResultCard": "mimic",
+    "Time": 10,
+    "StatusTerm": "craftablemod_idea_mimic_status"
+  },
+  {
+    "RequiredCards": "resource_chest,magic_dust",
+    "ResultCard": "mimic",
+    "Time": 10,
+    "StatusTerm": "craftablemod_idea_mimic_status"
+  }
+  ]
+}
