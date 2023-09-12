@@ -2,19 +2,255 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using System.Reflection;
 
 namespace CraftableMobNS
 {
-    public class Craftable : Blueprint
+    public class CraftableMob : Mod
+    {
+      public void Awake()
+      {
+        Logger.Log("Awake!");
+        TrapUtil.initDict();
+        Harmony.PatchAll(typeof(CraftableMob));
+      }
+      public override void Ready()
+      {
+        Logger.Log("Ready!");
+      }
+
+      [HarmonyPatch(typeof(Equipable), "TryEquipOnCard")]
+      [HarmonyPrefix]
+      static bool notequipelves(GameCard card, CardData __instance)
+      {
+        if (card != null)
+        {
+          if(TrapUtil.MobEquipChange.ContainsKey(card.CardData.Id))
+          {
+            foreach (AttackType atype in TrapUtil.MobEquipChange[card.CardData.Id])
+            {
+              if (__instance is Equipable equip && equip.AttackType == atype)
+              {
+                return false;
+              }
+            }
+            return true;
+          }
+          return true;
+        }
+        return true;
+      }
+
+      [HarmonyPatch(typeof(CardData), "GetDelegateForActionId")]
+      [HarmonyPrefix]
+      public static bool trapId(string id, CardData __instance, ref TimerAction __result)
+      {
+        if (id == "complete_trap")
+        {
+        MethodInfo method = typeof(HarvestableExtensions).GetMethod(nameof(HarvestableExtensions.CompleteTrap));
+        __result = (TimerAction)method.CreateDelegate(typeof(TimerAction), __instance);
+        }
+        else if (id == "complete_bait")
+        {
+          MethodInfo method = typeof(HarvestableExtensions).GetMethod(nameof(HarvestableExtensions.CompleteBait));
+          __result = (TimerAction)method.CreateDelegate(typeof(TimerAction), __instance);
+        }
+        else
+        {
+          return true;
+        }
+        return false;
+      }
+
+      [HarmonyPatch(typeof(CardData),  "CanHaveCardsWhileHasStatus")]
+      [HarmonyPostfix]
+      static void trapstatus(ref CardData __instance, ref bool __result)
+      {
+        if (__instance is Harvestable)
+        {
+          List<GameCard> IsRope = __instance.MyGameCard.GetChildCards();
+          foreach (GameCard child in IsRope)
+          {
+            if (child.CardData.Id == Cards.rope)
+            {
+              __result = true;
+            }
+          }
+        }
+      }
+      [HarmonyPatch(typeof(Harvestable),  "CanHaveCard")]
+      [HarmonyPostfix]
+      static void trap(CardData otherCard, ref bool __result, ref CardData __instance)
+      {
+        if (otherCard.Id == Cards.rope || otherCard is Food || TrapUtil.NotFoodBait.Contains(otherCard.Id) || (otherCard.Id == Cards.kid && __instance.Id == Cards.forest) || otherCard is Equipable equip && equip.AttackType == AttackType.Magic)
+        {
+          __result = true;
+        }
+      }
+
+      [HarmonyPatch(typeof(Mob),  "CanHaveCard")]
+      [HarmonyPostfix]
+      public static void rat(CardData otherCard, ref Mob __instance, ref bool __result)
+      {
+        if (otherCard.Id == Cards.stew && __instance.Id == Cards.rat)
+        {
+          __result = true;
+        }
+        if (otherCard.Id == Cards.goop && __instance.Id == Cards.small_slime)
+        {
+          __result = true;
+        }
+        if(TrapUtil.MobEquipChange.ContainsKey(__instance.Id))
+        {
+          foreach(AttackType attatype in TrapUtil.MobEquipChange[__instance.Id])
+          {
+            if(WorldManager.instance.GameDataLoader.GetCardFromId(otherCard.Id) is Equipable equip && equip.AttackType == attatype)
+            {
+              __result = true;
+            }
+          }
+        }
+      }
+
+      [HarmonyPatch(typeof(Resource),  "CanHaveCard")]
+      [HarmonyPostfix]
+      public static void mimic2(CardData otherCard, ref Resource __instance, ref bool __result)
+      {
+        if ((otherCard.Id == Cards.coin_chest || otherCard.Id == Cards.shell_chest) && __instance.Id == Cards.magic_dust)
+        {
+          __result = true;
+        }
+      }
+
+      [HarmonyPatch(typeof(Chest),  "CanHaveCard")]
+      [HarmonyPostfix]
+      public static void mimic5(CardData otherCard, ref Chest __instance, ref bool __result)
+      {
+        if ((__instance.Id == Cards.coin_chest || __instance.Id == Cards.shell_chest) && otherCard.Id == Cards.magic_dust)
+        {
+          __result = true;
+        }
+      }
+      [HarmonyPatch(typeof(TreasureChest),  "CanHaveCard")]
+      [HarmonyPostfix]
+      public static void mimic52(CardData otherCard, ref bool __result)
+      {
+        if (otherCard.Id == Cards.magic_dust)
+        {
+          __result = true;
+        }
+      }
+
+      [HarmonyPatch(typeof(Harvestable),  "UpdateCard")]
+      [HarmonyPrefix]
+      static void Prefix(Harvestable __instance)
+      {
+        if (__instance.MyGameCard.StackUpdate)
+        {
+          bool allgood = false;
+          bool baitgood = false;
+          bool first = true;
+          CardData bait = new CardData();
+          allgood = false;
+          baitgood = false;
+          TrapUtil.baitlist = __instance.MyGameCard.GetChildCards();
+          TrapUtil.baitchance = __instance.MyCardBag.Chances;
+
+          foreach (GameCard child in TrapUtil.baitlist)
+          {
+            CardData fchild = child.CardData;
+            if (fchild is BaseVillager/* && (__instance.Id == Cards.spring || __instance.Id == Cards.well)*/)
+            {
+              fchild = WorldManager.instance.GameDataLoader.GetCardFromId(Cards.villager);
+            }
+            if (fchild is Equipable equip && equip.AttackType == AttackType.Magic)
+            {
+              fchild = WorldManager.instance.GameDataLoader.GetCardFromId(Cards.magic_wand);
+            }
+            if (fchild.Id == Cards.rope)
+            {
+              foreach(CardChance c in TrapUtil.baitchance)
+              {
+                if(c.IsEnemy || WorldManager.instance.GameDataLoader.GetCardFromId(c.Id) is Mob )
+                {
+                  allgood = true;
+                    break;
+                }
+              }
+            }
+            /*if (TrapUtil.BaitToMob.ContainsKey(fchild.Id))
+            {
+              baitgood = true;
+              if(first)
+              {
+                bait = fchild;
+                first = false;
+              }
+            }*/
+            if (fchild is Food || TrapUtil.NotFoodBait.Contains(fchild.Id))
+            {
+              baitgood = true;
+              if(first)
+              {
+                bait = fchild;
+                first = false;
+              }
+            }
+          }
+          if (allgood)
+          {
+            ICardId cardId = new CardId(TrapUtil.DefaultMob);
+            if (TrapUtil.BaitToMob.ContainsKey(bait.Id))
+            {
+              cardId = TrapUtil.BaitToMob[bait.Id];
+            }
+            if (baitgood && TrapUtil.CheckHarvestable(cardId, __instance))
+            {
+              __instance.MyGameCard.StartTimer(TrapUtil.baittime,
+            () => {
+                HarvestableExtensions.CompleteBait(__instance);
+                }, SokLoc.Translate("craftablemod_idea_trap_status"), "complete_bait");
+            }
+            else
+            {
+              float TrueTrapTime;
+              float TotalChance = 0;
+              float EnemyChance = 0;
+              foreach (CardChance chance in TrapUtil.baitchance)
+              {
+                TotalChance += chance.Chance;
+                if (WorldManager.instance.GameDataLoader.GetCardFromId(chance.Id) is Mob || chance.IsEnemy)
+                  EnemyChance += chance.Chance;
+              }
+              var x = EnemyChance/TotalChance;
+              TrueTrapTime = (float)Math.Round(Mathf.Lerp(TrapUtil.traptime,120,(float)Math.Pow(1-x, TrapUtil.traptimepow))); // see wich combinaition is the greatest
+              __instance.MyGameCard.StartTimer(TrueTrapTime,
+              () => {
+                HarvestableExtensions.CompleteTrap(__instance);
+              }, SokLoc.Translate("craftablemod_idea_trap_status"), "complete_trap");
+            }
+          }
+          else
+          {
+            __instance.MyGameCard.CancelTimer("complete_bait");
+          __instance.MyGameCard.CancelTimer("complete_trap");
+          }
+        }
+      }
+    }
+    //For the rat to only eat a portion of the soup
+    public class Bigrat : Blueprint
     {
       public override void BlueprintComplete(GameCard rootCard, List<GameCard> involvedCards, Subprint print)
       {
+        bool first = true;
         foreach (GameCard card in involvedCards)
        {
-           if (card.CardData.Id == Cards.stew)
+           if (card.CardData.Id == Cards.stew && first)
            {
+               first = false;
                Food stew = (Food)card.CardData;
-               stew.FoodValue -= 2; // or change this to 1
+               stew.FoodValue -= 3; // to see wich value is good
                if (stew.FoodValue <= 0)
                    stew.MyGameCard.DestroyCard();
                else
@@ -26,78 +262,176 @@ namespace CraftableMobNS
            }
        }
        var spawnedCard = WorldManager.instance.CreateCard(rootCard.transform.position, print.ResultCard, true, false);
-       // uncomment the following line if you want the spawned card to also bounce like the stew
        spawnedCard.MyGameCard.SendIt();
       }
     }
 
-    public class CraftableMob : Mod
+    public class LotofSubprints : Blueprint
     {
-        public override void Ready()
-        {
-            Logger.Log("Ready!");
-            Harmony.PatchAll();
-        }
-    }
-
-    [HarmonyPatch(typeof(Mob),  "CanHaveCard")]
-    class Patch
-    {
-      static void Postfix(CardData otherCard, ref Mob __instance, ref bool __result)
+      public override void Init(GameDataLoader loader)
       {
-        if (otherCard.Id == "stew" && __instance.Id == "rat")
+        var id = this.Id;
+        var Attneed = AttackType.Melee;
+        if (id[0] == new string("m")[0])
         {
-          __result = true;
+          Attneed = AttackType.Magic;
         }
-      }
-    }
-
-    [HarmonyPatch(typeof(Resource),  "CanHaveCard")]
-    class Patch2
-    {
-      static void Postfix(CardData otherCard, ref Resource __instance, ref bool __result)
-      {
-        if ((otherCard.Id == "coin_chest" || otherCard.Id == "shell_chest") && __instance.Id == "magic_dust")
+        else if (id[0] == new string("r")[0])
         {
-          __result = true;
+          Attneed = AttackType.Ranged;
         }
-      }
-    }
-
-    [HarmonyPatch(typeof(Chest),  "CanHaveCard")]
-    class Patch5
-    {
-      static void Postfix(CardData otherCard, ref Chest __instance, ref bool __result)
-      {
-        if ((__instance.Id == "coin_chest" || __instance.Id == "shell_chest") && otherCard.Id == "magic_dust")
+        var mobneed = id.Substring(2, id.IndexOf("_", 2) - 2);
+        id = id.Substring(id.IndexOf("_", 2) + 1, id.Length - (id.IndexOf("_", 2) + 1));
+        this.Id = new string("craftablemob_blueprint_" + id);
+        Debug.Log(mobneed + " id: " + id + " Id: " + this.Id);
+        var i = 0;
+        foreach (string card in Cards.all)
         {
-          __result = true;
+          if (loader.GetCardFromId(card) is Equipable equip && equip.AttackType == Attneed)
+          {
+            this.Subprints.Add(new Subprint{
+				    RequiredCards = new string[2] {mobneed, card},
+				    ResultCard = id,
+				    Time = 0f,
+				    StatusTerm = "haha"
+            });
+            Debug.Log(mobneed + "  " + card + "  " + id);
+            Subprint subprint = this.Subprints[i];
+            subprint.ParentBlueprint = this;
+            subprint.SubprintIndex = i;
+            i+=1;
+          }
         }
       }
     }
 
-    [HarmonyPatch(typeof(TreasureChest),  "CanHaveCard")]
-    class Patch52
+    public static class HarvestableExtensions
     {
-      static void Postfix(CardData otherCard, ref TreasureChest __instance, ref bool __result)
+      [TimedAction("complete_trap")]
+      public static void CompleteTrap(this Harvestable card)
       {
-        if (__instance.Id == "treasure_chest" && otherCard.Id == "magic_dust")
+        var loader = WorldManager.instance.GameDataLoader;
+        List<CardId> moblist = new List<CardId>();
+        foreach (CardChance chance in card.MyCardBag.Chances)
         {
-          __result = true;
+          if (WorldManager.instance.GameDataLoader.GetCardFromId(chance.Id) is Mob)
+          {
+            moblist.Add(new CardId(chance.Id));
+          }
+          else if (chance.IsEnemy)
+          {
+            SetCardBagType setCardBagForEnemyCardBag = loader.GetSetCardBagForEnemyCardBag(chance.EnemyBag);
+            List<CardChance> chancesForSetCardBag = CardBag.GetChancesForSetCardBag(loader, setCardBagForEnemyCardBag);
+            chancesForSetCardBag.RemoveAll((CardChance x) => ((loader.GetCardFromId(x.Id) as Combatable).ProcessedCombatStats.CombatLevel > chance.Strength) ? true : false);
+            foreach(CardChance c in chancesForSetCardBag)
+            {
+              moblist.Add(new CardId(c.Id));
+            }
+          }
+        }
+        var spawnedCard = WorldManager.instance.CreateCard(card.transform.position, moblist[UnityEngine.Random.Range(0, moblist.Count)], true, false);
+        spawnedCard.MyGameCard.SendIt();
+        card.MyGameCard.StackUpdate = true;
+      }
+
+      [TimedAction("complete_bait")]
+      public static void CompleteBait(this Harvestable card)
+      {
+        CardData bait = null;
+        ICardId cardId = new CardId(TrapUtil.DefaultMob);
+        foreach (GameCard child in card.MyGameCard.GetChildCards())
+        {
+          if (child.CardData is Food || TrapUtil.NotFoodBait.Contains(child.CardData.Id))
+            bait = child.CardData;
+        }
+        if (TrapUtil.BaitToMob.ContainsKey(bait.Id))
+        {
+          cardId = TrapUtil.BaitToMob[bait.Id];
+        }
+        CardData spawned = WorldManager.instance.CreateCard(card.transform.position, cardId, true, false);
+        spawned.MyGameCard.SendIt();
+        if (bait is not BaseVillager)
+          bait.MyGameCard.DestroyCard();
+        else
+        {
+          bait.MyGameCard.Combatable.Damage(3);
+          bait.MyGameCard.SendIt();
         }
       }
     }
 
-    /*[HarmonyPatch(typeof(Draggable), "SendIt")]
-    class PatchPoulet2
+    public class TrapUtil : Harvestable
     {
-      static void Postfix(ref Draggable __instance)
+      public static List<GameCard> baitlist = new List<GameCard>();
+      public static List<CardChance> baitchance = new List<CardChance>();
+      public static string DefaultMob = Cards.feral_cat;
+      public static float baittime = 30f; // experiment to see wich is the best
+      public static float traptime = 60f; // same
+      public static float traptimepow = 2.5f; // same
+      public static Dictionary<string, List<string>> BaitException = new Dictionary<string, List<string>>() {{Cards.forest, new List<string>() {Cards.bear, Cards.giant_snail, Cards.wolf, Cards.ogre}}};
+      public static Dictionary<string, ICardId> BaitToMob = new Dictionary<string, ICardId>(){{Cards.raw_meat,new CardId(Cards.bear)}};
+      public static Dictionary<string, List<AttackType>> MobEquipChange = new Dictionary<string, List<AttackType>>() {{Cards.elf, new List<AttackType>() {AttackType.Ranged, AttackType.Magic}}};
+      public static List<string> NotFoodBait = new List<string>() {Cards.goop, Cards.rabbit, Cards.bone, Cards.gold_bar, Cards.magic_wand, Cards.villager};
+
+      public static void initDict()
       {
-        Debug.Log("NONNONONOO");
+        TrapUtil.BaitToMob.Add(Cards.seaweed, new CardId(Cards.giant_snail));
+        TrapUtil.BaitToMob.Add(Cards.villager, new CardId(Cards.mosquito));
+        TrapUtil.BaitToMob.Add(Cards.goop, new CardId(Cards.rat));
+        TrapUtil.BaitToMob.Add(Cards.raw_fish, new CardId(Cards.seagull));
+        TrapUtil.BaitToMob.Add(Cards.rabbit, new CardId(Cards.snake));
+        TrapUtil.BaitToMob.Add(Cards.bone, new CardId(Cards.wolf));
+        TrapUtil.BaitToMob.Add(Cards.carrot, new CardId(Cards.rabbit));
+        TrapUtil.BaitToMob.Add(Cards.gold_bar, new CardId(Cards.goblin));
+        TrapUtil.BaitToMob.Add(Cards.cow, new CardId(Cards.ogre));
+        TrapUtil.BaitToMob.Add(Cards.sheep, new CardId(Cards.ogre));
+        TrapUtil.BaitToMob.Add(Cards.magic_wand, new CardId(Cards.orc_wizard));
+        TrapUtil.BaitToMob.Add(Cards.banana, new CardId(Cards.monkey));
+        //TrapUtil.BaitException.Add(Cards.graveyard, new List<string>() {});
+        TrapUtil.BaitException.Add(Cards.jungle, new List<string>() {Cards.giant_snail, Cards.snake});
+        TrapUtil.BaitException.Add(Cards.mountain, new List<string>() {Cards.bear, Cards.ogre});
+        TrapUtil.BaitException.Add(Cards.old_village, new List<string>() {Cards.orc_wizard});
+        TrapUtil.BaitException.Add(Cards.plains, new List<string>() {Cards.giant_snail, Cards.snake});
+        TrapUtil.BaitException.Add(Cards.spring, new List<string>() {Cards.mosquito, Cards.seagull});
+        TrapUtil.BaitException.Add(Cards.well, new List<string>() {Cards.mosquito, Cards.seagull});
+      }
 
-        //__instance.RotWobble(5f);
+      public static string IdeaName(string name)
+      {
+        return("Idea: " + name);
+      }
 
-        Vector2 vector = UnityEngine.Random.insideUnitCircle.normalized * 20f * 1.5f;
-        __instance.Velocity = new Vector3(vector.x, 20f, vector.y);
-      }*/
+      public static bool CheckHarvestable(ICardId mobId, Harvestable harves)
+      {
+        var loader = WorldManager.instance.GameDataLoader;
+        if (mobId.Id == TrapUtil.DefaultMob)
+          return true;
+        if (TrapUtil.BaitException.ContainsKey(harves.Id))
+        {
+          if(TrapUtil.BaitException[harves.Id].Contains(mobId.Id))
+          {
+            return true;
+          }
+        }
+        //check if the card is in the base CardBag
+        foreach (CardChance c in harves.MyCardBag.Chances)
+        {
+          if (c.IsEnemy)
+          {
+            SetCardBagType setCardBagForEnemyCardBag = loader.GetSetCardBagForEnemyCardBag(c.EnemyBag);
+            List<CardChance> chancesForSetCardBag = CardBag.GetChancesForSetCardBag(loader, setCardBagForEnemyCardBag);
+            chancesForSetCardBag.RemoveAll((CardChance x) => ((loader.GetCardFromId(x.Id) as Combatable).ProcessedCombatStats.CombatLevel > c.Strength) ? true : false);
+            if (chancesForSetCardBag.Exists(chance => CardBag.CardChanceToIds(chance, loader).Contains(mobId.Id)))
+            {
+              return true;
+            }
+          }
+          else if (c.Id == mobId.Id)
+          {
+            return true;
+          }
+        }
+        return false;
+      }
+    }
 }

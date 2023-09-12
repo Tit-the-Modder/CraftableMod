@@ -1,5 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <Publicize Include="GameScripts" />
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  
   <PropertyGroup>
     <AssemblyName>CraftableMob</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>

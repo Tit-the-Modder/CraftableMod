@@ -1,0 +1,9 @@
+{
+  "id": "craftable_mob_rumor_trap",
+  "nameTerm": "craftable_mob_rumor_trap_name",
+  "descriptionTerm": "craftable_mob_rumor_trap_description",
+  "icon": "rumor_island",
+  "value": 1,
+  "type": "Rumors",
+  "script": "Rumor"
+}

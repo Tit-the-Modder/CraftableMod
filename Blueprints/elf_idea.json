@@ -1,0 +1,14 @@
+{
+  "id": "craftablemob_blueprint_elf",
+  "nameTerm": "card_elf_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "kid, forest",
+    "ResultCard": "elf",
+    "CardsToRemove": "kid",
+    "Time": 60,
+    "StatusTerm": "craftablemod_idea_elf_status"
+  }
+  ]
+}

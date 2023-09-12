@@ -1,0 +1,7 @@
+{
+  "id": "r_goblin_goblin_archer",
+  "nameTerm": "card_goblin_archer_name",
+  "group": "Cooking",
+  "subprints": [],
+  "script": "CraftableMobNS.LotofSubprints"
+}
