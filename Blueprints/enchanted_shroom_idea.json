@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_enchanted_shroom",
+  "id": "craftable_mob_blueprint_enchanted_shroom",
   "nameTerm": "card_enchanted_shroom_name",
   "group": "Cooking",
   "subprints": [
@@ -7,7 +7,7 @@
     "RequiredCards": "mushroom,magic_dust",
     "ResultCard": "enchanted_shroom",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_enchanted_shroom_status"
+    "StatusTerm": "craftable_mod_idea_enchanted_shroom_status"
   }
 ]
 }

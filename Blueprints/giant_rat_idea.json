@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_giant_rat",
+  "id": "craftable_mob_blueprint_giant_rat",
   "nameTerm": "card_giant_rat_name",
   "group": "Cooking",
   "needsExactMatch" : false,

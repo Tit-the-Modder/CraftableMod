@@ -1,15 +1,19 @@
 Term	Notes	English
-craftablemod_idea_skeleton_status		piling bones
-craftablemod_idea_enchanted_shroom_status		bringing mushrooms back to life
-craftablemod_idea_ghost_status		extracting the soul of the dead
-craftablemod_idea_giant_rat_status		feeding the rat
-craftablemod_idea_ent_status		corrupting the tree
-craftablemod_idea_mimic_status		realizing that all chest are mimics
-craftablemod_idea_small_slime_status		waiting for the goop to move
-craftablemod_idea_slime_status		adding goop to goop
-craftablemod_idea_elf_status		making a magic child
-craftablemob_idea_trap_name		trap
-craftablemod_idea_trap_status		catching animal
+craftable_mod_idea_skeleton_status		piling bones
+craftable_mod_idea_enchanted_shroom_status		bringing mushrooms back to life
+craftable_mod_idea_ghost_status		extracting the soul of the dead
+craftable_mod_idea_giant_rat_status		feeding the rat
+craftable_mod_idea_ent_status		corrupting the tree
+craftable_mod_idea_mimic_status		realizing that all chest are mimics
+craftable_mod_idea_small_slime_status		waiting for the goop to move
+craftable_mod_idea_slime_status		adding goop to goop
+craftable_mod_idea_elf_status		making a magic child
+craftable_mod_idea_wicked_witch_status		Learning the dark ways of magic
+craftable_mod_idea_pirate_status		giving you're location away
+craftable_mod_idea_rare_portal_status		building a rare portal
+craftable_mod_idea_strange_portal_status		building a portal
+craftable_mob_idea_trap_name		Trap
+craftable_mod_idea_trap_status		Catching Animals
 craftable_mob_rumor_trap_name		Trap
 craftable_mob_rumor_trap_description		Putting Rope on location (or any harvestable) will trap animals
 craftable_mob_rumor_trap_bear_name		Bear bait
@@ -18,7 +22,7 @@ craftable_mob_rumor_trap_giant_snail_name		Giant Snail bait
 craftable_mob_rumor_trap_giant_snail_description		Use a Rope and Seaweed on a Plains or a Jungle or a Forest (or any location that has Giant Snails in it) to guarantee getting a Giant Snail
 craftable_mob_rumor_trap_mosquito_name		Mosquito bait
 craftable_mob_rumor_trap_mosquito_description		Use a Rope and Villager on a Spring or a Well to guarantee getting a Mosquito
-craftable_mob_rumor_trap_rat_name		Rat bait
+craftable_mob_rumor_trap_rat_nam		Rat bait
 craftable_mob_rumor_trap_rat_description		Use a Rope and Goop on a Forest (or any location that has Rats in it) to guarantee getting a Rat
 craftable_mob_rumor_trap_seagull_name		Seagull bait
 craftable_mob_rumor_trap_seagull_description		Use a Rope and Raw Fish on a Spring (or any location that has Seagulls in it) to guarantee getting a Seagull
@@ -31,6 +35,16 @@ craftable_mob_rumor_trap_rabbit_description		Use a Rope and Carrot on a Berry Bu
 craftable_mob_rumor_trap_goblin_name		Goblin bait
 craftable_mob_rumor_trap_goblin_description		Use a Rope and Gold Bar on a Forest (or any location that has Goblins in it) to guarantee getting a Goblin
 craftable_mob_rumor_trap_ogre_name		Ogre bait
-craftable_mob_rumor_trap_ogre_description		Use a Rope and Cow or Sheep on a Forest (or any location that has Ogres in it) to guarantee getting a Ogre
+craftable_mob_rumor_trap_ogre_description		Use a Rope and Cow or Sheep on a Forest (or any location that has Ogres in it) to guarantee getting a Ogre 
 craftable_mob_rumor_trap_orc_wizard_name		Orc Wizard bait
 craftable_mob_rumor_trap_orc_wizard_description		Use a Rope and Corpse on a Old Village (or any location that has Orc Wizards in it) to guarantee getting a Orc Wizard
+craftable_mob_rumor_trap_monkey_name		Monkey bait
+craftable_mob_rumor_trap_monkey_description		Use a Rope and Banana on a Jungle (or any location that has Monkeys in it) to guarantee getting a Monkey
+craftable_mob_rumor_trap_feral_cat_name		Feral Cat Bait
+craftable_mob_rumor_trap_feral_cat_description		Use a Rope and Milk on a Forest (or any location that has Feral Cats in it) to guarantee getting a Feral Cat
+craftable_mob_rumor_trap_tiger_name		Tiger Bait
+craftable_mob_rumor_trap_tiger_description		Use a Rope and Chicken on a Jungle (or any location that has Tigers in it) to guarantee getting a Tiger
+craftable_mob_rumor_trap_merman_name		Merman Bait
+craftable_mob_rumor_trap_merman_description		Use a Rope and Milkshake on a Spring or a Well to guarantee getting a Merman
+craftable_mob_rumor_trap_frog_man_name		Frog Man Bait
+craftable_mob_rumor_trap_frog_man_description		Use a Rope and Bottle of Water on a Catacomb (or any location that has Frog Mans in it) to guarantee getting a Frog Man

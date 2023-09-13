@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_ent",
+  "id": "craftable_mob_blueprint_ent",
   "nameTerm": "card_ent_name",
   "group": "Cooking",
   "subprints": [
@@ -7,25 +7,25 @@
     "RequiredCards": "tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_ent_status",
+    "StatusTerm": "craftable_mod_idea_ent_status",
   },
   {
     "RequiredCards": "apple_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_ent_status"
+    "StatusTerm": "craftable_mod_idea_ent_status"
   },
   {
     "RequiredCards": "banana_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_ent_status"
+    "StatusTerm": "craftable_mod_idea_ent_status"
   },
   {
     "RequiredCards": "olive_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_ent_status"
+    "StatusTerm": "craftable_mod_idea_ent_status"
   }
   ]
 }

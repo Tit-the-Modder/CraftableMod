@@ -1,0 +1,13 @@
+{
+  "id": "craftable_mob_blueprint_strange_portal",
+  "nameTerm": "card_strange_portal_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "brick, brick, stone, stone, magic_dust, magic_dust, any_villager",
+    "ResultCard": "rare_portal",
+    "Time": 60,
+    "StatusTerm": "craftable_mod_idea_strange_portal_status"
+  }
+  ]
+}

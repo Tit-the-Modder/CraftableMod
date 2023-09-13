@@ -1,0 +1,21 @@
+{
+  "id": "craftable_mob_blueprint_pirate",
+  "nameTerm": "card_pirate_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "sloop, glass, map",
+    "CardsToRemove": "glass, map",
+    "ResultCard": "pirate",
+    "Time": 30,
+    "StatusTerm": "craftable_mod_idea_pirate_status"
+  },
+  {
+    "RequiredCards": "frigate, glass, map",
+    "CardsToRemove": "glass, map",
+    "ResultCard": "pirate",
+    "Time": 30,
+    "StatusTerm": "craftable_mod_idea_pirate_status"
+  }
+  ]
+}

@@ -1,6 +1,6 @@
 {
-  "id": "r_elf_elf_archer",
-  "nameTerm": "card_elf_archer_name",
+  "id": "craftable_mob_blueprint_elf_archer",
+  "nameTerm": "r_elf_elf_archer",
   "group": "Cooking",
   "subprints": [],
   "script": "CraftableMobNS.LotofSubprints"

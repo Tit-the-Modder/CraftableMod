@@ -66,4 +66,3 @@ for file in COPY_FILES:
 print("syncing folders..")
 for folder in SYNC_FOLDERS:
     sync_folder(Path(folder), MOD_PATH / folder)
-

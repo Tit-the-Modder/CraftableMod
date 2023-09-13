@@ -1,6 +1,6 @@
 {
-  "id": "m_elf_dark_elf",
-  "nameTerm": "card_dark_elf_name",
+  "id": "craftable_mob_blueprint_dark_elf",
+  "nameTerm": "m_elf_dark_elf",
   "group": "Cooking",
   "subprints":[],
   "script": "CraftableMobNS.LotofSubprints"

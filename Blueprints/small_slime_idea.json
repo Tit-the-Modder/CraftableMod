@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_small_slime",
+  "id": "craftable_mob_blueprint_small_slime",
   "nameTerm": "card_small_slime_name",
   "group": "Cooking",
   "subprints": [
@@ -7,7 +7,7 @@
     "RequiredCards": "goop,magic_dust",
     "ResultCard": "small_slime",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_small_slime_status"
+    "StatusTerm": "craftable_mod_idea_small_slime_status"
   }
 ]
 }

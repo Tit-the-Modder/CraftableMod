@@ -1,0 +1,15 @@
+{
+  "id": "craftable_mob_blueprint_wicked_witch",
+  "nameTerm": "card_wicked_witch_name",
+  "group": "Cooking",
+  "subprints": [
+  {
+    "RequiredCards": "mage, magic_dust, magic_dust, magic_dust",
+    "CardsToRemove": "mage, magic_dust",
+    "ResultCard": "wicked_witch",
+    "Time": 1,
+    "StatusTerm": "craftable_mod_idea_wicked_witch_status"
+  }
+],
+  "script": "CraftableMobNS.WickedWithEquipment",
+}

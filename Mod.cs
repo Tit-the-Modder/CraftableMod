@@ -27,16 +27,11 @@ namespace CraftableMobNS
         {
           if(TrapUtil.MobEquipChange.ContainsKey(card.CardData.Id))
           {
-            foreach (AttackType atype in TrapUtil.MobEquipChange[card.CardData.Id])
+            if (__instance is Equipable equip && TrapUtil.MobEquipChange[card.CardData.Id].Contains(equip.VillagerTypeOverride))
             {
-              if (__instance is Equipable equip && equip.AttackType == atype)
-              {
-                return false;
-              }
+              return false;
             }
-            return true;
           }
-          return true;
         }
         return true;
       }
@@ -96,18 +91,15 @@ namespace CraftableMobNS
         {
           __result = true;
         }
-        if (otherCard.Id == Cards.goop && __instance.Id == Cards.small_slime)
+        if (otherCard.Id == Cards.goop && __instance.Id == Cards.small_slime && otherCard.MyGameCard.GetRootCard().GetChildCount() + 1 == 3)
         {
           __result = true;
         }
         if(TrapUtil.MobEquipChange.ContainsKey(__instance.Id))
         {
-          foreach(AttackType attatype in TrapUtil.MobEquipChange[__instance.Id])
+          if(WorldManager.instance.GameDataLoader.GetCardFromId(otherCard.Id) is Equipable equip && TrapUtil.MobEquipChange[__instance.Id].Contains(equip.VillagerTypeOverride))
           {
-            if(WorldManager.instance.GameDataLoader.GetCardFromId(otherCard.Id) is Equipable equip && equip.AttackType == attatype)
-            {
-              __result = true;
-            }
+            __result = true;
           }
         }
       }
@@ -174,19 +166,23 @@ namespace CraftableMobNS
                 if(c.IsEnemy || WorldManager.instance.GameDataLoader.GetCardFromId(c.Id) is Mob )
                 {
                   allgood = true;
-                    break;
+                  break;
+                }
+              }
+              if (TrapUtil.BaitToMob.ContainsKey(fchild.Id))
+              {
+                if (TrapUtil.BaitException.ContainsKey(__instance.Id))
+                {
+                  allgood = true;
+                }
+                baitgood = true;
+                if(first)
+                {
+                  bait = fchild;
+                  first = false;
                 }
               }
             }
-            /*if (TrapUtil.BaitToMob.ContainsKey(fchild.Id))
-            {
-              baitgood = true;
-              if(first)
-              {
-                bait = fchild;
-                first = false;
-              }
-            }*/
             if (fchild is Food || TrapUtil.NotFoodBait.Contains(fchild.Id))
             {
               baitgood = true;
@@ -209,7 +205,7 @@ namespace CraftableMobNS
               __instance.MyGameCard.StartTimer(TrapUtil.baittime,
             () => {
                 HarvestableExtensions.CompleteBait(__instance);
-                }, SokLoc.Translate("craftablemod_idea_trap_status"), "complete_bait");
+                }, SokLoc.Translate("craftable_mod_idea_trap_status"), "complete_bait");
             }
             else
             {
@@ -227,7 +223,7 @@ namespace CraftableMobNS
               __instance.MyGameCard.StartTimer(TrueTrapTime,
               () => {
                 HarvestableExtensions.CompleteTrap(__instance);
-              }, SokLoc.Translate("craftablemod_idea_trap_status"), "complete_trap");
+              }, SokLoc.Translate("craftable_mod_idea_trap_status"), "complete_trap");
             }
           }
           else
@@ -245,7 +241,7 @@ namespace CraftableMobNS
       {
         bool first = true;
         foreach (GameCard card in involvedCards)
-       {
+        {
            if (card.CardData.Id == Cards.stew && first)
            {
                first = false;
@@ -270,32 +266,35 @@ namespace CraftableMobNS
     {
       public override void Init(GameDataLoader loader)
       {
-        var id = this.Id;
-        var Attneed = AttackType.Melee;
-        if (id[0] == new string("m")[0])
+        var name = this.NameTerm;
+        var Attneed = new List<string>();
+        if (name[0] == new string("m")[0])
         {
-          Attneed = AttackType.Magic;
+          Attneed.Add("wizard");
+          Attneed.Add("mage");
         }
-        else if (id[0] == new string("r")[0])
+        else if (name[0] == new string("r")[0])
         {
-          Attneed = AttackType.Ranged;
+          Attneed.Add("archer");
         }
-        var mobneed = id.Substring(2, id.IndexOf("_", 2) - 2);
-        id = id.Substring(id.IndexOf("_", 2) + 1, id.Length - (id.IndexOf("_", 2) + 1));
-        this.Id = new string("craftablemob_blueprint_" + id);
-        Debug.Log(mobneed + " id: " + id + " Id: " + this.Id);
+        var mobneed = name.Substring(2, name.IndexOf("_", 2) - 2);
+        name = name.Substring(name.IndexOf("_", 2) + 1);
+        this.NameTerm = new string("card_" + name + "_name");
+        //Debug.Log(mobneed + " name: " + name);
         var i = 0;
         foreach (string card in Cards.all)
         {
-          if (loader.GetCardFromId(card) is Equipable equip && equip.AttackType == Attneed)
+          if (loader.GetCardFromId(card) is Equipable equip && Attneed.Contains(equip.VillagerTypeOverride))
           {
+            Equipable cardequip = loader.GetCardFromId(card) as Equipable;
             this.Subprints.Add(new Subprint{
 				    RequiredCards = new string[2] {mobneed, card},
-				    ResultCard = id,
+				    ResultCard = name,
 				    Time = 0f,
 				    StatusTerm = "haha"
             });
-            Debug.Log(mobneed + "  " + card + "  " + id);
+            //Debug.Log(cardequip.VillagerTypeOverride);
+            //Debug.Log(this.Subprints[i].RequiredCards.Join() + "  " + this.Subprints[i].ResultCard);
             Subprint subprint = this.Subprints[i];
             subprint.ParentBlueprint = this;
             subprint.SubprintIndex = i;
@@ -305,6 +304,21 @@ namespace CraftableMobNS
       }
     }
 
+    public class WickedWithEquipment : Blueprint
+    {
+      public override void BlueprintComplete(GameCard rootCard, List<GameCard> involvedCards, Subprint print)
+      {
+        foreach (GameCard card in involvedCards)
+        {
+          card.DestroyCard();
+        }
+        var spawnedCard = WorldManager.instance.CreateCard(rootCard.transform.position, print.ResultCard, true, false);
+        var equip = WorldManager.instance.CreateCard(rootCard.transform.position, Cards.magic_broom, false ,false ,false);
+        spawnedCard.MyGameCard.EquipmentChildren.Add(equip.MyGameCard);
+        equip.MyGameCard.EquipmentHolder = spawnedCard.MyGameCard;
+        spawnedCard.MyGameCard.SendIt();
+      }
+    }
     public static class HarvestableExtensions
     {
       [TimedAction("complete_trap")]
@@ -350,13 +364,19 @@ namespace CraftableMobNS
         }
         CardData spawned = WorldManager.instance.CreateCard(card.transform.position, cardId, true, false);
         spawned.MyGameCard.SendIt();
-        if (bait is not BaseVillager)
-          bait.MyGameCard.DestroyCard();
-        else
+        if (bait is BaseVillager)
         {
           bait.MyGameCard.Combatable.Damage(3);
           bait.MyGameCard.SendIt();
         }
+        else if (bait.Id == Cards.bottle_of_water)
+        {
+          var newcard = WorldManager.instance.ChangeToCard(bait.MyGameCard, Cards.empty_bottle);
+          newcard.MyGameCard.RemoveFromParent();
+          newcard.MyGameCard.SendIt();
+        }
+        else
+          bait.MyGameCard.DestroyCard();
       }
     }
 
@@ -364,14 +384,14 @@ namespace CraftableMobNS
     {
       public static List<GameCard> baitlist = new List<GameCard>();
       public static List<CardChance> baitchance = new List<CardChance>();
-      public static string DefaultMob = Cards.feral_cat;
+      public static string DefaultMob = Cards.chicken;
       public static float baittime = 30f; // experiment to see wich is the best
       public static float traptime = 60f; // same
       public static float traptimepow = 2.5f; // same
-      public static Dictionary<string, List<string>> BaitException = new Dictionary<string, List<string>>() {{Cards.forest, new List<string>() {Cards.bear, Cards.giant_snail, Cards.wolf, Cards.ogre}}};
+      public static Dictionary<string, List<string>> BaitException = new Dictionary<string, List<string>>() {{Cards.forest, new List<string>() {Cards.bear, Cards.giant_snail, Cards.wolf, Cards.ogre, Cards.feral_cat}}};
       public static Dictionary<string, ICardId> BaitToMob = new Dictionary<string, ICardId>(){{Cards.raw_meat,new CardId(Cards.bear)}};
-      public static Dictionary<string, List<AttackType>> MobEquipChange = new Dictionary<string, List<AttackType>>() {{Cards.elf, new List<AttackType>() {AttackType.Ranged, AttackType.Magic}}};
-      public static List<string> NotFoodBait = new List<string>() {Cards.goop, Cards.rabbit, Cards.bone, Cards.gold_bar, Cards.magic_wand, Cards.villager};
+      public static Dictionary<string, List<string>> MobEquipChange = new Dictionary<string, List<string>>() {{Cards.elf, new List<string>() {"archer", "wizard", "mage"}}};
+      public static List<string> NotFoodBait = new List<string>() {Cards.goop, Cards.rabbit, Cards.bone, Cards.gold_bar, Cards.magic_wand, Cards.villager, Cards.chicken, Cards.cow, Cards.sheep, Cards.bottle_of_water};
 
       public static void initDict()
       {
@@ -387,13 +407,17 @@ namespace CraftableMobNS
         TrapUtil.BaitToMob.Add(Cards.sheep, new CardId(Cards.ogre));
         TrapUtil.BaitToMob.Add(Cards.magic_wand, new CardId(Cards.orc_wizard));
         TrapUtil.BaitToMob.Add(Cards.banana, new CardId(Cards.monkey));
+        TrapUtil.BaitToMob.Add(Cards.milk, new CardId(Cards.feral_cat));
+        TrapUtil.BaitToMob.Add(Cards.chicken, new CardId(Cards.tiger));
+        TrapUtil.BaitToMob.Add(Cards.milkshake, new CardId(Cards.merman));
+        TrapUtil.BaitToMob.Add(Cards.bottle_of_water, new CardId(Cards.frog_man));
         //TrapUtil.BaitException.Add(Cards.graveyard, new List<string>() {});
         TrapUtil.BaitException.Add(Cards.jungle, new List<string>() {Cards.giant_snail, Cards.snake});
         TrapUtil.BaitException.Add(Cards.mountain, new List<string>() {Cards.bear, Cards.ogre});
         TrapUtil.BaitException.Add(Cards.old_village, new List<string>() {Cards.orc_wizard});
         TrapUtil.BaitException.Add(Cards.plains, new List<string>() {Cards.giant_snail, Cards.snake});
-        TrapUtil.BaitException.Add(Cards.spring, new List<string>() {Cards.mosquito, Cards.seagull});
-        TrapUtil.BaitException.Add(Cards.well, new List<string>() {Cards.mosquito, Cards.seagull});
+        TrapUtil.BaitException.Add(Cards.spring, new List<string>() {Cards.mosquito, Cards.seagull, Cards.merman});
+        TrapUtil.BaitException.Add(Cards.well, new List<string>() {Cards.mosquito, Cards.seagull, Cards.merman});
       }
 
       public static string IdeaName(string name)

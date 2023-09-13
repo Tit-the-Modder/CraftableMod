@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_slime",
+  "id": "craftable_mob_blueprint_slime",
   "nameTerm": "card_slime_name",
   "group": "Cooking",
   "needsExactMatch" : false,

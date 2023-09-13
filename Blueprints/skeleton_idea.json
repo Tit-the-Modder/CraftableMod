@@ -1,5 +1,5 @@
 {
-  "id": "craftablemob_blueprint_skeleton",
+  "id": "craftable_mob_blueprint_skeleton",
   "nameTerm": "card_skeleton_name",
   "group": "Cooking",
   "subprints": [
@@ -7,7 +7,7 @@
     "RequiredCards": "bone,bone,bone,bone,bone",
     "ResultCard": "skeleton",
     "Time": 10,
-    "StatusTerm": "craftablemod_idea_skeleton_status"
+    "StatusTerm": "craftable_mod_idea_skeleton_status"
   }
 ]
 }
