@@ -22,7 +22,7 @@ craftable_mob_rumor_trap_giant_snail_name		Giant Snail bait
 craftable_mob_rumor_trap_giant_snail_description		Use a Rope and Seaweed on a Plains or a Jungle or a Forest (or any location that has Giant Snails in it) to guarantee getting a Giant Snail
 craftable_mob_rumor_trap_mosquito_name		Mosquito bait
 craftable_mob_rumor_trap_mosquito_description		Use a Rope and Villager on a Spring or a Well to guarantee getting a Mosquito
-craftable_mob_rumor_trap_rat_nam		Rat bait
+craftable_mob_rumor_trap_rat_name		Rat bait
 craftable_mob_rumor_trap_rat_description		Use a Rope and Goop on a Forest (or any location that has Rats in it) to guarantee getting a Rat
 craftable_mob_rumor_trap_seagull_name		Seagull bait
 craftable_mob_rumor_trap_seagull_description		Use a Rope and Raw Fish on a Spring (or any location that has Seagulls in it) to guarantee getting a Seagull
@@ -35,7 +35,7 @@ craftable_mob_rumor_trap_rabbit_description		Use a Rope and Carrot on a Berry Bu
 craftable_mob_rumor_trap_goblin_name		Goblin bait
 craftable_mob_rumor_trap_goblin_description		Use a Rope and Gold Bar on a Forest (or any location that has Goblins in it) to guarantee getting a Goblin
 craftable_mob_rumor_trap_ogre_name		Ogre bait
-craftable_mob_rumor_trap_ogre_description		Use a Rope and Cow or Sheep on a Forest (or any location that has Ogres in it) to guarantee getting a Ogre 
+craftable_mob_rumor_trap_ogre_description		Use a Rope and Cow or Sheep on a Forest (or any location that has Ogres in it) to guarantee getting a Ogre
 craftable_mob_rumor_trap_orc_wizard_name		Orc Wizard bait
 craftable_mob_rumor_trap_orc_wizard_description		Use a Rope and Corpse on a Old Village (or any location that has Orc Wizards in it) to guarantee getting a Orc Wizard
 craftable_mob_rumor_trap_monkey_name		Monkey bait

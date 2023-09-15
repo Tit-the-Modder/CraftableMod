@@ -19,6 +19,21 @@ namespace CraftableMobNS
         Logger.Log("Ready!");
       }
 
+      [HarmonyPatch(typeof(Mob),  "TryDropEquipment")]
+      [HarmonyPostfix]
+      public static void TryDropIdeaRumor(CardData __instance)
+      {
+        var Idea = new CardData();
+        if (WorldManager.instance.GameDataLoader.idToCard.TryGetValue("craftable_mob_blueprint_" + __instance.Id, out Idea)) {}
+        else if (WorldManager.instance.GameDataLoader.idToCard.TryGetValue("craftable_mob_rumor_trap_" + __instance.Id, out Idea)) {}
+        if (!(Idea == new CardData() || WorldManager.instance.HasFoundCard(Idea.Id)))
+        {
+             var createcard = WorldManager.instance.CreateCard(__instance.transform.position, Idea.Id, true, false);
+             createcard.MyGameCard.SendIt();
+        }
+      }
+
+
       [HarmonyPatch(typeof(Equipable), "TryEquipOnCard")]
       [HarmonyPrefix]
       static bool notequipelves(GameCard card, CardData __instance)
