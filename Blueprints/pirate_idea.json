@@ -8,14 +8,14 @@
     "CardsToRemove": "glass, map",
     "ResultCard": "pirate",
     "Time": 30,
-    "StatusTerm": "craftable_mod_idea_pirate_status"
+    "StatusTerm": "craftable_mob_idea_pirate_status"
   },
   {
     "RequiredCards": "frigate, glass, map",
     "CardsToRemove": "glass, map",
     "ResultCard": "pirate",
     "Time": 30,
-    "StatusTerm": "craftable_mod_idea_pirate_status"
+    "StatusTerm": "craftable_mob_idea_pirate_status"
   }
   ]
 }

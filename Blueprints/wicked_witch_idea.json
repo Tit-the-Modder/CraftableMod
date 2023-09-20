@@ -8,7 +8,7 @@
     "CardsToRemove": "mage, magic_dust",
     "ResultCard": "wicked_witch",
     "Time": 1,
-    "StatusTerm": "craftable_mod_idea_wicked_witch_status"
+    "StatusTerm": "craftable_mob_idea_wicked_witch_status"
   }
 ],
   "script": "CraftableMobNS.WickedWithEquipment",

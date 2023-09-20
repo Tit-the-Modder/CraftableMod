@@ -7,7 +7,7 @@
     "RequiredCards": "goop,magic_dust",
     "ResultCard": "small_slime",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_small_slime_status"
+    "StatusTerm": "craftable_mob_idea_small_slime_status"
   }
 ]
 }

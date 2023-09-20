@@ -8,7 +8,7 @@
     "ResultCard": "elf",
     "CardsToRemove": "kid",
     "Time": 60,
-    "StatusTerm": "craftable_mod_idea_elf_status"
+    "StatusTerm": "craftable_mob_idea_elf_status"
   }
   ]
 }

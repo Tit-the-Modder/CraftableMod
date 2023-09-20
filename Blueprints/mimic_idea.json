@@ -7,25 +7,25 @@
     "RequiredCards": "coin_chest,magic_dust",
     "ResultCard": "mimic",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_mimic_status"
+    "StatusTerm": "craftable_mob_idea_mimic_status"
   },
   {
     "RequiredCards": "shell_chest,magic_dust",
     "ResultCard": "mimic",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_mimic_status"
+    "StatusTerm": "craftable_mob_idea_mimic_status"
   },
   {
     "RequiredCards": "treasure_chest,magic_dust",
     "ResultCard": "mimic",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_mimic_status"
+    "StatusTerm": "craftable_mob_idea_mimic_status"
   },
   {
     "RequiredCards": "resource_chest,magic_dust",
     "ResultCard": "mimic",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_mimic_status"
+    "StatusTerm": "craftable_mob_idea_mimic_status"
   }
   ]
 }

@@ -7,7 +7,7 @@
     "RequiredCards": "brick, brick, brick, brick, stone, stone, stone, stone, magic_dust, magic_dust, magic_dust, magic_dust, any_villager, any_villager",
     "ResultCard": "rare_portal",
     "Time": 60,
-    "StatusTerm": "craftable_mod_idea_rare_portal_status"
+    "StatusTerm": "craftable_mob_idea_rare_portal_status"
   }
   ]
 }

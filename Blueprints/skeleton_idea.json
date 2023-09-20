@@ -7,7 +7,7 @@
     "RequiredCards": "bone,bone,bone,bone,bone",
     "ResultCard": "skeleton",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_skeleton_status"
+    "StatusTerm": "craftable_mob_idea_skeleton_status"
   }
 ]
 }

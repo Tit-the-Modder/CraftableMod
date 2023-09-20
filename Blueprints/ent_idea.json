@@ -7,25 +7,25 @@
     "RequiredCards": "tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_ent_status",
+    "StatusTerm": "craftable_mob_idea_ent_status",
   },
   {
     "RequiredCards": "apple_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_ent_status"
+    "StatusTerm": "craftable_mob_idea_ent_status"
   },
   {
     "RequiredCards": "banana_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_ent_status"
+    "StatusTerm": "craftable_mob_idea_ent_status"
   },
   {
     "RequiredCards": "olive_tree,magic_dust",
     "ResultCard": "ent",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_ent_status"
+    "StatusTerm": "craftable_mob_idea_ent_status"
   }
   ]
 }

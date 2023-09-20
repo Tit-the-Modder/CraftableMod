@@ -7,7 +7,7 @@
     "RequiredCards": "corpse,magic_dust",
     "ResultCard": "ghost",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_ghost_status"
+    "StatusTerm": "craftable_mob_idea_ghost_status"
   }
 ]
 }

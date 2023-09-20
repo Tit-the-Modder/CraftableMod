@@ -7,7 +7,7 @@
     "RequiredCards": "mushroom,magic_dust",
     "ResultCard": "enchanted_shroom",
     "Time": 10,
-    "StatusTerm": "craftable_mod_idea_enchanted_shroom_status"
+    "StatusTerm": "craftable_mob_idea_enchanted_shroom_status"
   }
 ]
 }

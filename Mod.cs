@@ -10,26 +10,55 @@ namespace CraftableMobNS
     {
       public void Awake()
       {
-        Logger.Log("Awake!");
+        //Logger.Log("Awake!");
         TrapUtil.initDict();
         Harmony.PatchAll(typeof(CraftableMob));
       }
       public override void Ready()
       {
-        Logger.Log("Ready!");
+        WorldManager.instance.GameDataLoader.AddCardToSetCardBag(SetCardBagType.Island_AdvancedIdea, "craftable_mob_rumor_trap", 1);
       }
 
-      [HarmonyPatch(typeof(Mob),  "TryDropEquipment")]
+      [HarmonyPatch(typeof(ForestCombatManager),  "PrepareWave")]
+      [HarmonyPostfix]
+      public static void DropWitchIdea()
+      {
+        var wickedwitchidea = "craftable_mob_blueprint_" + Cards.wicked_witch;
+        Debug.Log(WorldManager.instance.CurrentRunVariables.FinishedWickedWitch);
+        if (!(WorldManager.instance.HasFoundCard(wickedwitchidea)) && (WorldManager.instance.CurrentRunVariables.FinishedWickedWitch ||  WorldManager.instance.CurrentRunVariables.ForestWave > ForestCombatManager.instance.WickedWitchWave))
+        {
+          var createcard = WorldManager.instance.CreateCard(WorldManager.instance.MiddleOfBoard(), wickedwitchidea, true, false);
+          createcard.MyGameCard.SendIt();
+        }
+      }
+      [HarmonyPatch(typeof(StrangePortal),  "SpawnCreature")]
+      [HarmonyPostfix]
+      public static void TryDropIdeaPortals(CardData __instance)
+      {
+        var Idea = new CardData();
+        WorldManager.instance.GameDataLoader.idToCard.TryGetValue("craftable_mob_blueprint_" + __instance.Id, out Idea);
+        if (!(Idea == null || WorldManager.instance.HasFoundCard(Idea.Id)))
+        {
+          var createcard = WorldManager.instance.CreateCard(__instance.transform.position, Idea.Id, true, false);
+          createcard.MyGameCard.SendIt();
+        }
+      }
+      [HarmonyPatch(typeof(Mob),  "TryDropItems")]
       [HarmonyPostfix]
       public static void TryDropIdeaRumor(CardData __instance)
       {
+        // Debug.Log(WorldManager.instance.GameDataLoader.idToCard.Join());
         var Idea = new CardData();
-        if (WorldManager.instance.GameDataLoader.idToCard.TryGetValue("craftable_mob_blueprint_" + __instance.Id, out Idea)) {}
-        else if (WorldManager.instance.GameDataLoader.idToCard.TryGetValue("craftable_mob_rumor_trap_" + __instance.Id, out Idea)) {}
-        if (!(Idea == new CardData() || WorldManager.instance.HasFoundCard(Idea.Id)))
+        if (WorldManager.instance.GameDataLoader.idToCard.ContainsKey("craftable_mob_blueprint_" + __instance.Id))
+          Idea = WorldManager.instance.GameDataLoader.idToCard["craftable_mob_blueprint_" + __instance.Id];
+        else if (WorldManager.instance.GameDataLoader.idToCard.ContainsKey("craftable_mob_rumor_trap_" + __instance.Id))
+          Idea = WorldManager.instance.GameDataLoader.idToCard["craftable_mob_rumor_trap_" + __instance.Id];
+
+        //Debug.Log(Idea);
+        if (!(Idea == null || WorldManager.instance.HasFoundCard(Idea.Id)))
         {
-             var createcard = WorldManager.instance.CreateCard(__instance.transform.position, Idea.Id, true, false);
-             createcard.MyGameCard.SendIt();
+          var createcard = WorldManager.instance.CreateCard(__instance.transform.position, Idea.Id, true, false);
+          createcard.MyGameCard.SendIt();
         }
       }
 
