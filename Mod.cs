@@ -19,12 +19,47 @@ namespace CraftableMobNS
         WorldManager.instance.GameDataLoader.AddCardToSetCardBag(SetCardBagType.Island_AdvancedIdea, "craftable_mob_rumor_trap", 1);
       }
 
+      [HarmonyPatch(typeof(GameDataLoader),  "GetCardFromId")]
+      [HarmonyPrefix]
+      public static bool CheckAnyWeapons(ref CardData __result,ref string cardId)
+      {
+        switch (cardId)
+        {
+          case "any_ranged_weapon":
+            __result = GameDataLoader.instance.idToCard["bow"];
+            return false;
+          case "any_magic_weapon":
+            __result = GameDataLoader.instance.idToCard["magic_wand"];
+            return false;
+          default:
+          {
+            return true;
+          }
+        }
+      }
+
+      [HarmonyPatch(typeof(Subprint),  "UpdateAnyVillagerCardIds")]
+      [HarmonyPostfix]
+      public static void UpdateAnyTypeEquipmentIds()
+      {
+        if(!Subprint.specialCardIds.ContainsKey("any_ranged_weapon"))
+        {
+          Subprint.specialCardIds.Add("any_ranged_weapon","");
+        }
+        if(!Subprint.specialCardIds.ContainsKey("any_magic_weapon"))
+        {
+          Subprint.specialCardIds.Add("any_magic_weapon","");
+        }
+        Subprint.specialCardIds["any_ranged_weapon"] = string.Join("|", TrapUtil.GetEquipmentCardIds((Equipable x) => (x.VillagerTypeOverride == "archer")));
+        Subprint.specialCardIds["any_magic_weapon"] = string.Join("|", TrapUtil.GetEquipmentCardIds((Equipable x) => (x.VillagerTypeOverride == "mage" || x.VillagerTypeOverride == "wizard")));
+      }
+
       [HarmonyPatch(typeof(ForestCombatManager),  "PrepareWave")]
       [HarmonyPostfix]
       public static void DropWitchIdea()
       {
         var wickedwitchidea = "craftable_mob_blueprint_" + Cards.wicked_witch;
-        Debug.Log(WorldManager.instance.CurrentRunVariables.FinishedWickedWitch);
+        //Debug.Log(WorldManager.instance.CurrentRunVariables.FinishedWickedWitch);
         if (!(WorldManager.instance.HasFoundCard(wickedwitchidea)) && (WorldManager.instance.CurrentRunVariables.FinishedWickedWitch ||  WorldManager.instance.CurrentRunVariables.ForestWave > ForestCombatManager.instance.WickedWitchWave))
         {
           var createcard = WorldManager.instance.CreateCard(WorldManager.instance.MiddleOfBoard(), wickedwitchidea, true, false);
@@ -306,7 +341,7 @@ namespace CraftableMobNS
       }
     }
 
-    public class LotofSubprints : Blueprint
+    /*public class LotofSubprints : Blueprint
     {
       public override void Init(GameDataLoader loader)
       {
@@ -346,7 +381,7 @@ namespace CraftableMobNS
           }
         }
       }
-    }
+    }*/
 
     public class WickedWithEquipment : Blueprint
     {
@@ -434,7 +469,7 @@ namespace CraftableMobNS
       public static float traptimepow = 2.5f; // same
       public static Dictionary<string, List<string>> BaitException = new Dictionary<string, List<string>>() {{Cards.forest, new List<string>() {Cards.bear, Cards.giant_snail, Cards.wolf, Cards.ogre, Cards.feral_cat}}};
       public static Dictionary<string, ICardId> BaitToMob = new Dictionary<string, ICardId>(){{Cards.raw_meat,new CardId(Cards.bear)}};
-      public static Dictionary<string, List<string>> MobEquipChange = new Dictionary<string, List<string>>() {{Cards.elf, new List<string>() {"archer", "wizard", "mage"}}};
+      public static Dictionary<string, List<string>> MobEquipChange = new Dictionary<string, List<string>>() {{Cards.elf, new List<string>() {"archer", "wizard", "mage"}},{Cards.goblin, new List<string>() {"archer", "wizard", "mage"}}};
       public static List<string> NotFoodBait = new List<string>() {Cards.goop, Cards.rabbit, Cards.bone, Cards.gold_bar, Cards.magic_wand, Cards.villager, Cards.chicken, Cards.cow, Cards.sheep, Cards.bottle_of_water};
 
       public static void initDict()
@@ -462,6 +497,19 @@ namespace CraftableMobNS
         TrapUtil.BaitException.Add(Cards.plains, new List<string>() {Cards.giant_snail, Cards.snake});
         TrapUtil.BaitException.Add(Cards.spring, new List<string>() {Cards.mosquito, Cards.seagull, Cards.merman});
         TrapUtil.BaitException.Add(Cards.well, new List<string>() {Cards.mosquito, Cards.seagull, Cards.merman});
+      }
+
+      public static List<string> GetEquipmentCardIds(Predicate<Equipable> pred = null)
+      {
+        List<string> list = new List<string>();
+        foreach (CardData cardDataPrefab in WorldManager.instance.GameDataLoader.CardDataPrefabs)
+        {
+          if (cardDataPrefab is Equipable obj && (pred == null || pred(obj)))
+          {
+            list.Add(cardDataPrefab.Id);
+          }
+        }
+        return list;
       }
 
       public static string IdeaName(string name)

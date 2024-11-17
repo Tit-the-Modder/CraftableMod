@@ -1,7 +1,13 @@
 {
   "id": "craftable_mob_blueprint_dark_elf",
-  "nameTerm": "m_elf_dark_elf",
+  "nameTerm": "card_dark_elf_name",
   "group": "Cooking",
-  "subprints":[],
-  "script": "CraftableMobNS.LotofSubprints"
+  "needsExactMatch" : false,
+  "subprints": [
+  {
+    "RequiredCards": "elf,any_magic_weapon",
+    "ResultCard": "dark_elf",
+    "Time": 0
+  }
+  ]
 }

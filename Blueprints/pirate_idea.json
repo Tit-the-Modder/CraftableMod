@@ -4,7 +4,7 @@
   "group": "Cooking",
   "subprints": [
   {
-    "RequiredCards": "sloop, glass, map",
+    "RequiredCards": "sloop,glass,map",
     "CardsToRemove": "glass, map",
     "ResultCard": "pirate",
     "Time": 30,

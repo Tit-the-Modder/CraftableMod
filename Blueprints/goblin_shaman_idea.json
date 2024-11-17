@@ -1,7 +1,13 @@
 {
   "id": "craftable_mob_blueprint_goblin_shaman",
-  "nameTerm": "m_goblin_goblin_shaman",
+  "nameTerm": "card_goblin_shaman_name",
   "group": "Cooking",
-  "subprints":[],
-  "script": "CraftableMobNS.LotofSubprints"
+  "needsExactMatch" : false,
+  "subprints": [
+  {
+    "RequiredCards": "goblin,any_magic_weapon",
+    "ResultCard": "goblin_shaman",
+    "Time": 0
+  }
+  ]
 }
